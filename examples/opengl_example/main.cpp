@@ -35,6 +35,7 @@ int main(int, char**)
 
     bool show_test_window = true;
     bool show_another_window = false;
+	bool show_my_window = true;
     ImVec4 clear_color = ImColor(114, 144, 154);
 
     // Main loop
@@ -45,15 +46,15 @@ int main(int, char**)
 
         // 1. Show a simple window
         // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
-        {
-            static float f = 0.0f;
-            ImGui::Text("Hello, world!");
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-            ImGui::ColorEdit3("clear color", (float*)&clear_color);
-            if (ImGui::Button("Test Window")) show_test_window ^= 1;
-            if (ImGui::Button("Another Window")) show_another_window ^= 1;
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        }
+        //{
+        //    static float f = 0.0f;
+        //    ImGui::Text("Hello, world!");
+        //    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+        //    ImGui::ColorEdit3("clear color", (float*)&clear_color);
+        //    if (ImGui::Button("Test Window")) show_test_window ^= 1;
+        //    if (ImGui::Button("Another Window")) show_another_window ^= 1;
+        //    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        //}
 
         // 2. Show another simple window, this time using an explicit Begin/End pair
         if (show_another_window)
@@ -70,6 +71,31 @@ int main(int, char**)
             ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
             ImGui::ShowTestWindow(&show_test_window);
         }
+
+		if (show_my_window)
+		{
+			ImGui::SetNextWindowPos(ImVec2(350, 20), ImGuiSetCond_FirstUseEver);
+			ImGui::Begin("Tree Test Window", &show_my_window);
+			
+			if (ImGui::TreeNode("Tree"))
+			{
+				static bool selected[5] { false, false, false, false, false};
+				for (int i = 0; i < 5; i++)
+				{
+					if (ImGui::TreeNodeSel((void*)(intptr_t)i, &selected[i], "Child %d", i))
+					{
+						ImGui::Text("blah blah");
+						ImGui::SameLine();
+						if (ImGui::SmallButton("print"))
+							printf("Child %d pressed", i);
+						ImGui::TreePop();
+					}
+				}
+				ImGui::TreePop();
+			}
+
+			ImGui::End();
+		}
 
         // Rendering
         int display_w, display_h;

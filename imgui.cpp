@@ -5629,7 +5629,7 @@ bool ImGui::TreeNodeBehaviorIsOpened(ImGuiID id, ImGuiTreeNodeFlags flags)
 }
 
 // FIXME: Split into CollapsingHeader(label, default_open?) and TreeNodeBehavior(label), obsolete the 4 parameters function.
-bool ImGui::CollapsingHeader(const char* label, const char* str_id, bool display_frame, bool default_open)
+bool ImGui::CollapsingHeader(const char* label, const char* str_id, bool display_frame, bool default_open, ImGuiCollapsingHeaderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -5704,7 +5704,10 @@ bool ImGui::CollapsingHeader(const char* label, const char* str_id, bool display
     {
         // Unframed typed for tree nodes
         if (hovered)
-            RenderFrame(bb.Min, bb.Max, col, false);
+			if (flags & ImGuiCollapsingHeaderFlags_Hover_Triangle)
+				RenderFrame(bb.Min + ImVec2(padding.x, 0), ImVec2(text_pos.x - padding.x, bb.Max.y), col, false, 20);
+			else
+				RenderFrame(bb.Min, bb.Max, col, false);
 
         RenderCollapseTriangle(bb.Min + ImVec2(padding.x, g.FontSize*0.15f + text_base_offset_y), opened, 0.70f, false);
         if (g.LogEnabled)
@@ -5828,6 +5831,31 @@ bool ImGui::TreeNodeV(const void* ptr_id, const char* fmt, va_list args)
     return opened;
 }
 
+// If returning 'true' the node is open and the user is responsible for calling TreePop
+bool ImGui::TreeNodeVSel(const void* ptr_id, bool* p_selected, const char* fmt, va_list args)
+{
+    ImGuiWindow* window = GetCurrentWindow();
+    if (window->SkipItems)
+        return false;
+
+    ImGuiState& g = *GImGui;
+    ImFormatStringV(g.TempBuffer, IM_ARRAYSIZE(g.TempBuffer), fmt, args);
+
+    if (!ptr_id)
+        ptr_id = fmt;
+
+    ImGui::PushID(ptr_id);
+    const bool opened = ImGui::CollapsingHeader("", "", false, false, ImGuiCollapsingHeaderFlags_Hover_Triangle);
+	ImGui::SameLine();
+	ImGui::Selectable(g.TempBuffer, p_selected);
+    ImGui::PopID();
+
+    if (opened)
+        ImGui::TreePush(ptr_id);
+
+    return opened;
+}
+
 bool ImGui::TreeNode(const void* ptr_id, const char* fmt, ...)
 {
     va_list args;
@@ -5835,6 +5863,15 @@ bool ImGui::TreeNode(const void* ptr_id, const char* fmt, ...)
     bool s = TreeNodeV(ptr_id, fmt, args);
     va_end(args);
     return s;
+}
+
+bool ImGui::TreeNodeSel(const void* ptr_id, bool* p_selected, const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	bool s = TreeNodeVSel(ptr_id, p_selected, fmt, args);
+	va_end(args);
+	return s;
 }
 
 bool ImGui::TreeNode(const char* str_label_id)

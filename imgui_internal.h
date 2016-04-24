@@ -36,10 +36,11 @@ struct ImGuiPopupRef;
 struct ImGuiState;
 struct ImGuiWindow;
 
-typedef int ImGuiLayoutType;      // enum ImGuiLayoutType_
-typedef int ImGuiButtonFlags;     // enum ImGuiButtonFlags_
-typedef int ImGuiTreeNodeFlags;   // enum ImGuiTreeNodeFlags_
-typedef int ImGuiSliderFlags;     // enum ImGuiSliderFlags_
+typedef int ImGuiLayoutType;            // enum ImGuiLayoutType_
+typedef int ImGuiButtonFlags;           // enum ImGuiButtonFlags_
+typedef int ImGuiTreeNodeFlags;         // enum ImGuiTreeNodeFlags_
+typedef int ImGuiSliderFlags;           // enum ImGuiSliderFlags_
+typedef int ImGuiCollapsingHeaderFlags; // enum ImGuiCollapsingHeaderFlags_
 
 //-------------------------------------------------------------------------
 // STB libraries
@@ -166,7 +167,12 @@ enum ImGuiButtonFlags_
 enum ImGuiTreeNodeFlags_
 {
     ImGuiTreeNodeFlags_DefaultOpen          = 1 << 0,
-    ImGuiTreeNodeFlags_NoAutoExpandOnLog    = 1 << 1
+    ImGuiTreeNodeFlags_NoAutoExpandOnLog    = 1 << 1,
+};
+
+enum ImGuiCollapsingHeaderFlags_
+{
+	ImGuiCollapsingHeaderFlags_Hover_Triangle = 1 << 0,
 };
 
 enum ImGuiSliderFlags_
