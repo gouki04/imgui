@@ -161,10 +161,14 @@
   <ItemGroup>
     <ClInclude Include="..\..\imconfig.h" />
     <ClInclude Include="..\..\imgui.h" />
+    <ClInclude Include="..\..\imgui_dock.h" />
     <ClInclude Include="..\..\imgui_internal.h" />
+    <ClInclude Include="..\..\imgui_user.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\imgui_dock.inl" />
+    <None Include="..\..\imgui_user.inl" />
     <None Include="..\README.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
